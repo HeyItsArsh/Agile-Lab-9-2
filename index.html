@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Bookstore</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f8f9fb;
+            color: #222;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #174a7e;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #174a7e;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #222;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        input, button {
+            padding: 10px 14px;
+            margin: 6px;
+            font-size: 15px;
+            border-radius: 5px;
+        }
+
+        input {
+            width: 260px;
+            max-width: 80%;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            border: none;
+            background: #174a7e;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #10365d;
+        }
+
+        .section {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #e5e9ef;
+            border-radius: 10px;
+        }
+
+        .book {
+            margin: 18px auto;
+            padding: 18px;
+            max-width: 650px;
+            background: #fafbfd;
+            border: 1px solid #e5e9ef;
+            border-radius: 8px;
+        }
+
+        .book h3 {
+            margin-top: 0;
+        }
+
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .unavailable {
+            color: red;
+            font-weight: bold;
+        }
+
+        #cart {
+            font-weight: bold;
+            color: #174a7e;
+        }
+
+        #message {
+            font-weight: bold;
+            color: #174a7e;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 12px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .section {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="section">
+        <h1>Online Bookstore</h1>
+        <p>Browse books and order your favourites.</p>
+
+        <input id="search" type="text"
+               placeholder="Search title or author"
+               oninput="searchBooks()">
+
+        <p>Shopping Cart: <span id="cart">0</span> books</p>
+    </header>
+
+    <section class="section">
+        <h2>Books</h2>
+
+        <div class="book">
+            <h3>Clean Code</h3>
+            <p>Author: Robert C. Martin</p>
+            <p>Category: Programming</p>
+            <p>Price: ₹550</p>
+            <p class="available">Availability: In Stock</p>
+            <button onclick="addToCart('Clean Code', true)">Add to Cart</button>
+        </div>
+
+        <div class="book">
+            <h3>Python Crash Course</h3>
+            <p>Author: Eric Matthes</p>
+            <p>Category: Programming</p>
+            <p>Price: ₹450</p>
+            <p class="available">Availability: In Stock</p>
+            <button onclick="addToCart('Python Crash Course', true)">Add to Cart</button>
+        </div>
+
+        <div class="book">
+            <h3>Atomic Habits</h3>
+            <p>Author: James Clear</p>
+            <p>Category: Self-Help</p>
+            <p>Price: ₹399</p>
+            <p class="available">Availability: In Stock</p>
+            <button onclick="addToCart('Atomic Habits', true)">Add to Cart</button>
+        </div>
+
+        <div class="book">
+            <h3>The Alchemist</h3>
+            <p>Author: Paulo Coelho</p>
+            <p>Category: Fiction</p>
+            <p>Price: ₹299</p>
+            <p class="available">Availability: In Stock</p>
+            <button onclick="addToCart('The Alchemist', true)">Add to Cart</button>
+        </div>
+
+        <div class="book">
+            <h3>Wings of Fire</h3>
+            <p>Author: A. P. J. Abdul Kalam</p>
+            <p>Category: Biography</p>
+            <p>Price: ₹250</p>
+            <p class="unavailable">Availability: Out of Stock</p>
+            <button onclick="addToCart('Wings of Fire', false)">Add to Cart</button>
+        </div>
+
+        <div class="book">
+            <h3>Introduction to Algorithms</h3>
+            <p>Author: Thomas H. Cormen</p>
+            <p>Category: Computer Science</p>
+            <p>Price: ₹799</p>
+            <p class="available">Availability: In Stock</p>
+            <button onclick="addToCart('Introduction to Algorithms', true)">Add to Cart</button>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Order</h2>
+        <button onclick="checkout()">Place Order</button>
+        <p id="message"></p>
+    </section>
+
+    <script>
+        let cart = 0;
+        let booksInCart = [];
+
+        function addToCart(title, available) {
+            if (!available) {
+                document.getElementById("message").textContent =
+                    "This book is out of stock.";
+                return;
+            }
+
+            cart++;
+            booksInCart.push(title);
+            document.getElementById("cart").textContent = cart;
+            document.getElementById("message").textContent =
+                title + " added to cart.";
+        }
+
+        function searchBooks() {
+            const query = document.getElementById("search")
+                .value.toLowerCase();
+
+            document.querySelectorAll(".book").forEach(book => {
+                book.style.display = book.textContent
+                    .toLowerCase().includes(query) ? "" : "none";
+            });
+        }
+
+        function checkout() {
+            if (cart === 0) {
+                document.getElementById("message").textContent =
+                    "Your cart is empty.";
+                return;
+            }
+
+            document.getElementById("message").textContent =
+                "Thank you! Your order has been placed. Order status: Confirmed.";
+
+            cart = 0;
+            booksInCart = [];
+            document.getElementById("cart").textContent = cart;
+        }
+    </script>
+</body>
+</html>
