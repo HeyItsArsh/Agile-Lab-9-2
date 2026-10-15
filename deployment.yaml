@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: online-bookstore
-          image: DOCKERHUB_USERNAME/online-bookstore:v1
+          image: HeyItsArsh/online-bookstore:v1
           ports:
             - containerPort: 80
 ---
